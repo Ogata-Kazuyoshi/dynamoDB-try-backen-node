@@ -38,3 +38,28 @@ export const handler = async (event) => {
 - IAMロールでDynamoDBへのフルアクセスをアタッチしてるが、それ以外は特に何もしてない
 - ライブラリのインポートも不要
 - aws-sdkのver3を使用すること
+
+### AWS SAM(ローカルでの確認)のインストール方法
+
+<details>
+<summary> 1. インストール</summary>
+
+- 下記コマンドでインストール
+
+```zh
+   brew tap aws/tap
+   brew install aws-sam-cli
+```
+
+</details>
+
+<details>
+<summary> 2. プロジェクトのセットアップ</summary>
+
+- 下記コマンドでインストール
+
+```zh
+   sam init
+```
+
+</details>
