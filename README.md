@@ -37,3 +37,4 @@ export const handler = async (event) => {
 
 - IAMロールでDynamoDBへのフルアクセスをアタッチしてるが、それ以外は特に何もしてない
 - ライブラリのインポートも不要
+- aws-sdkのver3を使用すること
