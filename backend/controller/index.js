@@ -3,6 +3,6 @@ import testController from './dynamoDBController.js';
 
 const router = Router();
 
-router.use('/test', testController);
+router.use('/', testController);
 
 export default router;

@@ -1,0 +1,143 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ts-gateway-lambda-dynamodb
+
+  Sample SAM Template for ts-gateway-lambda-dynamodb
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+  GetAllItems:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdafunction/
+      Handler: controller/getAllItems.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      Architectures:
+        - x86_64
+      Events:
+        GetAllItems:
+          Type: Api
+          Properties:
+            Path: /api/get-all-items
+            Method: get
+            RestApiId: !Ref ApiGateway
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - controller/getAllItems.ts
+
+  GetItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdafunction/
+      Handler: controller/getItem.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      Architectures:
+        - x86_64
+      Events:
+        GetItem:
+          Type: Api
+          Properties:
+            Path: /api/get-item/{id}
+            Method: get
+            RestApiId: !Ref ApiGateway
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - controller/getItem.ts
+
+  PostItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdafunction/
+      Handler: controller/postItem.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      Architectures:
+        - x86_64
+      Events:
+        PostItem:
+          Type: Api
+          Properties:
+            Path: /api/put-item
+            Method: post
+            RestApiId: !Ref ApiGateway
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - controller/postItem.ts
+
+  DeleteItem:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdafunction/
+      Handler: controller/deleteItem.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          DYNAMODB_ENDPOINT: http://dynamodb-local:8000
+      Architectures:
+        - x86_64
+      Events:
+        DeleteItem:
+          Type: Api
+          Properties:
+            Path: /api/delete-item/{id}
+            Method: delete
+            RestApiId: !Ref ApiGateway
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - controller/deleteItem.ts
+
+#Outputs:
+#  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+#  # Find out more about other implicit resources you can reference within SAM
+#  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+#  HelloWorldApi:
+#    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+#  LambdaFunction:
+#    Description: "Hello World Lambda Function ARN"
+#    Value: !GetAtt LambdaFunction.Arn
+#  HelloWorldFunctionIamRole:
+#    Description: "Implicit IAM Role created for Hello World function"
+#    Value: !GetAtt HelloWorldFunctionRole.Arn
