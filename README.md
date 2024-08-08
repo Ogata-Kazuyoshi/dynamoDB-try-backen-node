@@ -51,9 +51,27 @@ export const handler = async (event) => {
 
 ```
 
-- IAMロールでDynamoDBへのフルアクセスをアタッチしてるが、それ以外は特に何もしてない
+- IAMロールでDynamoDBへのフルアクセスをアタッチすると、IAMユーザーの書き込み権限がついてくるのでセキュリティ上よくない。下のポリシーを自分でかく
 - ライブラリのインポートも不要
 - aws-sdkのver3を使用すること
+
+```applicatio.json
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": [
+				"dynamodb:CreateTable",
+				"dynamodb:PutItem",
+				"dynamodb:GetItem",
+				"dynamodb:Scan"
+			],
+			"Resource": "arn:aws:dynamodb:ap-northeast-1:<アカウントID>:table/<テーブル名>"
+		}
+	]
+}
+```
 
 ### AWS SAM(ローカルでの確認)の使用方法
 
